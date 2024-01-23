@@ -12,9 +12,9 @@ import {
 import { getExplorerLink } from "@solana-developers/helpers";
 
 // define some default locations
-const DEFAULT_KEY_DIR_NAME = ".local_keys";
-const DEFAULT_PUBLIC_KEY_FILE = "keys.json";
-const DEFAULT_DEMO_DATA_FILE = "demo.json";
+export const DEFAULT_KEY_DIR_NAME = ".local_keys";
+export const DEFAULT_PUBLIC_KEY_FILE = "keys.json";
+export const DEFAULT_DEMO_DATA_FILE = "demo.json";
 
 /**
  * Load locally stored PublicKey addresses

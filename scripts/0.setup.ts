@@ -4,6 +4,8 @@
 
 import { Keypair } from "@solana/web3.js";
 import { getKeypairFromFile, addKeypairToEnvFile } from "@solana-developers/helpers";
+import fs from "fs";
+import { DEFAULT_KEY_DIR_NAME } from "@/helpers";
 
 let payer: Keypair;
 
@@ -26,3 +28,10 @@ const testWallet = Keypair.generate();
 console.log("Test wallet:", testWallet.publicKey.toBase58(), "\n");
 
 await addKeypairToEnvFile(testWallet, "TEST_KEYPAIR");
+
+try {
+  fs.mkdirSync(DEFAULT_KEY_DIR_NAME);
+  console.log(`created directory: ${DEFAULT_KEY_DIR_NAME}`);
+} catch (err) {
+  console.log(`${DEFAULT_KEY_DIR_NAME} directory already exists`);
+}

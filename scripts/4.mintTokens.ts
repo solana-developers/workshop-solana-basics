@@ -36,7 +36,7 @@ const tokenMint: PublicKey = localKeys.tokenMint;
 
 console.log("==== Local PublicKeys loaded ====");
 console.log("Token's mint address:", tokenMint.toBase58());
-console.log(getExplorerLink("transaction", tokenMint.toBase58(), "devnet"));
+console.log(getExplorerLink("address", tokenMint.toBase58(), "devnet"));
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
@@ -91,7 +91,7 @@ const mintSig = await mintTo(
   payer,
   tokenMint,
   tokenAccount,
-  payer,
+  payer, // mint authority
   amountOfTokensToMint,
 );
 

@@ -78,7 +78,7 @@ const createMintAccountInstruction = SystemProgram.createAccount({
 const initializeMintInstruction = createInitializeMint2Instruction(
   mintKeypair.publicKey,
   tokenConfig.decimals,
-  payer.publicKey,
+  payer.publicKey, // mint authority
   payer.publicKey,
 );
 
