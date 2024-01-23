@@ -5,7 +5,7 @@
 - https://solana.com/developers
 - https://solana.com/developers/guides
 - Slides from the workshop:
-  https://docs.google.com/presentation/d/1N2-3XMqtoZspSeiPJt3JQChTljCxb-0xJTelP315g1I/edit?usp=sharing
+  https://docs.google.com/presentation/d/1BpObg9lOMllUxdcHJQ5EpJGVGGiNmwcS1QUysbs91y0/edit?usp=sharing
 
 ## Tech stack used
 
