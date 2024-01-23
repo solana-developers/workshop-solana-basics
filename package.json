@@ -1,0 +1,22 @@
+{
+  "name": "solana-basics-crash-course",
+  "version": "1.0.0",
+  "license": "MIT",
+  "extension": [
+    "ts"
+  ],
+  "dependencies": {
+    "@metaplex-foundation/js": "^0.19.3",
+    "@metaplex-foundation/mpl-token-metadata": "^2.11.1",
+    "@solana-developers/helpers": "^1.5.1",
+    "@solana/spl-token": "^0.3.11",
+    "@solana/web3.js": "^1.89.1",
+    "dotenv": "^16.0.3"
+  },
+  "devDependencies": {
+    "eslint": "^8.35.0",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.1.2",
+    "typescript": "^4.8.4"
+  }
+}
