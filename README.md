@@ -16,7 +16,7 @@
 
 1. Clone this repo to your local system
 2. Install the packages via `yarn install`
-3. Running the [`0.setup.ts`](./scripts/0.setup.ts)`
+3. Running the [`0.setup.ts`](./scripts/0.setup.ts)
 
 ## Recommended flow to explore this repo
 
