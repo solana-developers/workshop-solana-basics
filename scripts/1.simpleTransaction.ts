@@ -13,7 +13,7 @@ import {
   VersionedTransaction,
   clusterApiUrl,
 } from "@solana/web3.js";
-import { airdropIfRequired, getExplorerLink, initializeKeypair } from "@solana-developers/helpers";
+import { getExplorerLink, initializeKeypair } from "@solana-developers/helpers";
 import { DEFAULT_CLI_KEYPAIR_PATH, KEYPAIR_PAYER_ENV_NAME } from "@/utils";
 
 dotenv.config();
@@ -27,6 +27,10 @@ const connection = new Connection(
   "confirmed",
 );
 
+/**
+ * load a keypair from either the local file system or an env variable
+ * then auto airdrop some sol if this keypair has a low balance
+ */
 const payer = await initializeKeypair(connection, {
   keypairPath: DEFAULT_CLI_KEYPAIR_PATH,
   envVariableName: KEYPAIR_PAYER_ENV_NAME,
@@ -38,9 +42,6 @@ console.log("Payer address:", payer.publicKey.toBase58(), "\n");
 const currentBalance = await connection.getBalance(payer.publicKey);
 console.log("Current balance of 'payer' (in lamports):", currentBalance);
 console.log("Current balance of 'payer' (in SOL):", currentBalance / LAMPORTS_PER_SOL);
-
-// airdrop on low balance of <1 SOL)
-await airdropIfRequired(connection, payer.publicKey, LAMPORTS_PER_SOL, LAMPORTS_PER_SOL);
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
