@@ -3,8 +3,6 @@
  * Demonstrates how to build a more complex transaction, with multiple instructions
  */
 
-// import custom helpers for demos
-
 import * as dotenv from "dotenv";
 
 import {
@@ -14,8 +12,14 @@ import {
   VersionedTransaction,
   clusterApiUrl,
   PublicKey,
+  Keypair,
 } from "@solana/web3.js";
-import { getExplorerLink, initializeKeypair } from "@solana-developers/helpers";
+import {
+  addKeypairToEnvFile,
+  getExplorerLink,
+  getKeypairFromEnvironment,
+  initializeKeypair,
+} from "@solana-developers/helpers";
 import { DEFAULT_CLI_KEYPAIR_PATH, KEYPAIR_PAYER_ENV_NAME, KEYPAIR_TESTER_ENV_NAME } from "@/utils";
 
 dotenv.config();
@@ -36,17 +40,21 @@ const payer = await initializeKeypair(connection, {
 
 console.log("Payer address:", payer.publicKey.toBase58(), "\n");
 
-const testWallet = await initializeKeypair(connection, {
-  envVariableName: KEYPAIR_TESTER_ENV_NAME,
-});
+// const testKeypair = await initializeKeypair(connection, {
+//   envVariableName: KEYPAIR_TESTER_ENV_NAME,
+//   requestAirdropIfRequired: false
+// });
 
-console.log("Test wallet address:", testWallet.publicKey.toBase58());
+const testKeypair = getKeypairFromEnvironment(KEYPAIR_TESTER_ENV_NAME);
+
+console.log("Test keypair address:", testKeypair.publicKey.toBase58());
 
 /**
  * create a simple instruction (using web3.js) to create an account
  */
 
-const space = 0; // on-chain space to allocated (in number of bytes)
+// on-chain space to allocated (in number of bytes)
+const space = 0;
 
 // request the cost (in lamports) to allocate `space` number of bytes on chain
 const balanceForRentExemption = await connection.getMinimumBalanceForRentExemption(space);
@@ -56,7 +64,7 @@ const createTestAccountIx = SystemProgram.createAccount({
   // `fromPubkey` - this account will need to sign the transaction
   fromPubkey: payer.publicKey,
   // `newAccountPubkey` - the account address to create on chain
-  newAccountPubkey: testWallet.publicKey,
+  newAccountPubkey: testKeypair.publicKey,
   // lamports to store in this account
   lamports: balanceForRentExemption + 2_000_000,
   // total space to allocate
@@ -66,17 +74,17 @@ const createTestAccountIx = SystemProgram.createAccount({
 });
 
 // create an instruction to transfer lamports
-const transferToTestWalletIx = SystemProgram.transfer({
+const transferToTestKeypairIx = SystemProgram.transfer({
   lamports: balanceForRentExemption + 100_000,
   // `fromPubkey` - from MUST sign the transaction
   fromPubkey: payer.publicKey,
   // `toPubkey` - does NOT have to sign the transaction
-  toPubkey: testWallet.publicKey,
+  toPubkey: testKeypair.publicKey,
   programId: SystemProgram.programId,
 });
 
 // create an other instruction to transfer lamports
-const transferToStaticWalletIx = SystemProgram.transfer({
+const transferToStaticAddressIx = SystemProgram.transfer({
   lamports: 100_000,
   // `fromPubkey` - from MUST sign the transaction
   fromPubkey: payer.publicKey,
@@ -97,14 +105,14 @@ const message = new TransactionMessage({
   payerKey: payer.publicKey,
   recentBlockhash,
   instructions: [
-    // create the test wallet's account on chain
+    // create the test account on chain
     createTestAccountIx,
-    // transfer lamports to the static wallet
-    transferToStaticWalletIx,
-    // transfer lamports to the test wallet
-    transferToTestWalletIx,
-    // transfer lamports to the static wallet
-    transferToStaticWalletIx,
+    // transfer lamports to the static address
+    transferToStaticAddressIx,
+    // transfer lamports to the test address
+    transferToTestKeypairIx,
+    // transfer lamports to the static address
+    transferToStaticAddressIx,
   ],
 }).compileToV0Message();
 
@@ -118,11 +126,11 @@ const tx = new VersionedTransaction(message);
 
 // console.log("tx before signing:", tx);
 
-// sign the transaction with our needed Signers (e.g. `payer` and `keypair`)
-tx.sign([payer, testWallet]);
+// sign the transaction with our needed Signers (e.g. `payer` and `testKeypair`)
+tx.sign([payer, testKeypair]);
 
 // actually send the transaction
 const txSig = await connection.sendTransaction(tx);
 
-console.log("Transaction completed.");
+console.log("Transaction completed");
 console.log(getExplorerLink("transaction", txSig, "devnet"));

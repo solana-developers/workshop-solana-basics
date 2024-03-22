@@ -18,7 +18,11 @@ import {
   PROGRAM_ID as METADATA_PROGRAM_ID,
   createCreateMetadataAccountV3Instruction,
 } from "@metaplex-foundation/mpl-token-metadata";
-import { getExplorerLink, initializeKeypair } from "@solana-developers/helpers";
+import {
+  getExplorerLink,
+  getKeypairFromEnvironment,
+  initializeKeypair,
+} from "@solana-developers/helpers";
 
 dotenv.config();
 
@@ -38,11 +42,14 @@ const payer = await initializeKeypair(connection, {
 
 console.log("Payer address:", payer.publicKey.toBase58(), "\n");
 
-const testWallet = await initializeKeypair(connection, {
-  envVariableName: KEYPAIR_TESTER_ENV_NAME,
-});
+// const testKeypair = await initializeKeypair(connection, {
+//   envVariableName: KEYPAIR_TESTER_ENV_NAME,
+//   requestAirdropIfRequired: false
+// });
 
-console.log("Test wallet address:", testWallet.publicKey.toBase58());
+const testKeypair = getKeypairFromEnvironment(KEYPAIR_TESTER_ENV_NAME);
+
+console.log("Test keypair address:", testKeypair.publicKey.toBase58());
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
