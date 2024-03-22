@@ -1,9 +1,7 @@
 import fs from "fs";
-import path from "path";
 import {
   Connection,
   Keypair,
-  LAMPORTS_PER_SOL,
   PublicKey,
   TransactionInstruction,
   TransactionMessage,
@@ -47,38 +45,6 @@ export function loadPublicKeysFromFile(
 }
 
 /*
-  Locally save a demo data to the filesystem for later retrieval
-*/
-export function saveDemoDataToFile(
-  name: string,
-  newData: any,
-  absPath: string = `${DEFAULT_KEY_DIR_NAME}/${DEFAULT_DEMO_DATA_FILE}`,
-) {
-  try {
-    let data: object = {};
-
-    // fetch all the current values, when the storage file exists
-    if (fs.existsSync(absPath))
-      data = JSON.parse(fs.readFileSync(absPath, { encoding: "utf-8" })) || {};
-
-    data = { ...data, [name]: newData };
-
-    // actually save the data to the file
-    fs.writeFileSync(absPath, JSON.stringify(data), {
-      encoding: "utf-8",
-    });
-
-    return data;
-  } catch (err) {
-    console.warn("Unable to save to file");
-    // console.warn(err);
-  }
-
-  // always return an object
-  return {};
-}
-
-/*
   Locally save a PublicKey addresses to the filesystem for later retrieval
 */
 export function savePublicKeyToFile(
@@ -113,101 +79,6 @@ export function savePublicKeyToFile(
   }
   // always return an object
   return {};
-}
-
-/*
-  Load a locally stored JSON keypair file and convert it to a valid Keypair
-*/
-export function loadKeypairFromFile(absPath: string) {
-  try {
-    if (!absPath) throw Error("No path provided");
-    if (!fs.existsSync(absPath)) throw Error("File does not exist.");
-
-    // load the keypair from the file
-    const keyfileBytes = JSON.parse(fs.readFileSync(absPath, { encoding: "utf-8" }));
-    // parse the loaded secretKey into a valid keypair
-    const keypair = Keypair.fromSecretKey(new Uint8Array(keyfileBytes));
-    return keypair;
-  } catch (err) {
-    // return false;
-    throw err;
-  }
-}
-
-/*
-  Save a locally stored JSON keypair file for later importing
-*/
-export function saveKeypairToFile(
-  keypair: Keypair,
-  fileName: string,
-  dirName: string = DEFAULT_KEY_DIR_NAME,
-) {
-  fileName = path.join(dirName, `${fileName}.json`);
-
-  // create the `dirName` directory, if it does not exists
-  if (!fs.existsSync(`./${dirName}/`)) fs.mkdirSync(`./${dirName}/`);
-
-  // remove the current file, if it already exists
-  if (fs.existsSync(fileName)) fs.unlinkSync(fileName);
-
-  // write the `secretKey` value as a string
-  fs.writeFileSync(fileName, `[${keypair.secretKey.toString()}]`, {
-    encoding: "utf-8",
-  });
-
-  return fileName;
-}
-
-/*
-  Attempt to load a keypair from the filesystem, or generate and save a new one
-*/
-export function loadOrGenerateKeypair(fileName: string, dirName: string = DEFAULT_KEY_DIR_NAME) {
-  try {
-    // compute the path to locate the file
-    const searchPath = path.join(dirName, `${fileName}.json`);
-    let keypair = Keypair.generate();
-
-    // attempt to load the keypair from the file
-    if (fs.existsSync(searchPath)) keypair = loadKeypairFromFile(searchPath);
-    // when unable to locate the keypair, save the new one
-    else saveKeypairToFile(keypair, fileName, dirName);
-
-    return keypair;
-  } catch (err) {
-    console.error("loadOrGenerateKeypair:", err);
-    throw err;
-  }
-}
-
-/**
- * Auto airdrop the given wallet of of a balance of < 0.5 SOL
- */
-export async function airdropOnLowBalance(
-  connection: Connection,
-  keypair: Keypair,
-  forceAirdrop: boolean = false,
-) {
-  // get the current balance
-  let balance = await connection.getBalance(keypair.publicKey);
-
-  // define the low balance threshold before airdrop
-  const MIN_BALANCE_TO_AIRDROP = LAMPORTS_PER_SOL / 2; // current: 0.5 SOL
-
-  // check the balance of the two accounts, airdrop when low
-  if (forceAirdrop === true || balance < MIN_BALANCE_TO_AIRDROP) {
-    console.log(`Requesting airdrop of 1 SOL to ${keypair.publicKey.toBase58()}...`);
-    await connection.requestAirdrop(keypair.publicKey, LAMPORTS_PER_SOL).then(sig => {
-      console.log("Tx signature:", sig);
-      // balance = balance + LAMPORTS_PER_SOL;
-    });
-
-    // fetch the new balance
-    // const newBalance = await connection.getBalance(keypair.publicKey);
-    // return newBalance;
-  }
-  // else console.log("Balance of:", balance / LAMPORTS_PER_SOL, "SOL");
-
-  return balance;
 }
 
 /*
