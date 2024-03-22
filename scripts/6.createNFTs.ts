@@ -6,22 +6,26 @@ import * as dotenv from "dotenv";
 
 import { Connection, PublicKey, clusterApiUrl } from "@solana/web3.js";
 import { Metaplex, bundlrStorage, keypairIdentity } from "@metaplex-foundation/js";
-import { getExplorerLink, getKeypairFromEnvironment } from "@solana-developers/helpers";
-import { loadPublicKeysFromFile } from "@/helpers";
+import { getExplorerLink, initializeKeypair } from "@solana-developers/helpers";
+import { loadPublicKeysFromFile, DEFAULT_CLI_KEYPAIR_PATH, KEYPAIR_PAYER_ENV_NAME } from "@/utils";
 
 dotenv.config();
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 
-const payer = await getKeypairFromEnvironment("PAYER_KEYPAIR");
-console.log("Payer address:", payer.publicKey.toBase58(), "\n");
-
 // create a connection to the Solana blockchain
 const connection = new Connection(
   process.env.SOLANA_RPC_URL || clusterApiUrl("devnet"),
   "confirmed",
 );
+
+const payer = await initializeKeypair(connection, {
+  keypairPath: DEFAULT_CLI_KEYPAIR_PATH,
+  envVariableName: KEYPAIR_PAYER_ENV_NAME,
+});
+
+console.log("Payer address:", payer.publicKey.toBase58(), "\n");
 
 // load the stored PublicKeys for ease of use
 let localKeys = loadPublicKeysFromFile();

@@ -16,6 +16,10 @@ export const DEFAULT_KEY_DIR_NAME = ".local_keys";
 export const DEFAULT_PUBLIC_KEY_FILE = "keys.json";
 export const DEFAULT_DEMO_DATA_FILE = "demo.json";
 
+export const DEFAULT_CLI_KEYPAIR_PATH = "~/.config/solana/id.json";
+export const KEYPAIR_PAYER_ENV_NAME = "PAYER_KEYPAIR";
+export const KEYPAIR_TESTER_ENV_NAME = "TESTER_KEYPAIR";
+
 /**
  * Load locally stored PublicKey addresses
  */

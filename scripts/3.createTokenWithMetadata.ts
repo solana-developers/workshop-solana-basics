@@ -8,31 +8,41 @@ import {
   buildTransaction,
   extractSignatureFromFailedTransaction,
   savePublicKeyToFile,
-} from "@/helpers";
+  DEFAULT_CLI_KEYPAIR_PATH,
+  KEYPAIR_PAYER_ENV_NAME,
+  KEYPAIR_TESTER_ENV_NAME,
+} from "@/utils";
 import { Connection, Keypair, PublicKey, SystemProgram, clusterApiUrl } from "@solana/web3.js";
 import { MINT_SIZE, TOKEN_PROGRAM_ID, createInitializeMint2Instruction } from "@solana/spl-token";
 import {
   PROGRAM_ID as METADATA_PROGRAM_ID,
   createCreateMetadataAccountV3Instruction,
 } from "@metaplex-foundation/mpl-token-metadata";
-import { getExplorerLink, getKeypairFromEnvironment } from "@solana-developers/helpers";
+import { getExplorerLink, initializeKeypair } from "@solana-developers/helpers";
 
 dotenv.config();
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 
-const payer = await getKeypairFromEnvironment("PAYER_KEYPAIR");
-console.log("Payer address:", payer.publicKey.toBase58(), "\n");
-
-const testWallet = await getKeypairFromEnvironment("TEST_KEYPAIR");
-console.log("Test wallet address:", testWallet.publicKey.toBase58());
-
 // create a connection to the Solana blockchain
 const connection = new Connection(
   process.env.SOLANA_RPC_URL || clusterApiUrl("devnet"),
   "confirmed",
 );
+
+const payer = await initializeKeypair(connection, {
+  keypairPath: DEFAULT_CLI_KEYPAIR_PATH,
+  envVariableName: KEYPAIR_PAYER_ENV_NAME,
+});
+
+console.log("Payer address:", payer.publicKey.toBase58(), "\n");
+
+const testWallet = await initializeKeypair(connection, {
+  envVariableName: KEYPAIR_TESTER_ENV_NAME,
+});
+
+console.log("Test wallet address:", testWallet.publicKey.toBase58());
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////

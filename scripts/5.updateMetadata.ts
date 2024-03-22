@@ -9,26 +9,32 @@ import {
   PROGRAM_ID as METADATA_PROGRAM_ID,
   createUpdateMetadataAccountV2Instruction,
 } from "@metaplex-foundation/mpl-token-metadata";
-import { getExplorerLink, getKeypairFromEnvironment } from "@solana-developers/helpers";
+import { getExplorerLink, initializeKeypair } from "@solana-developers/helpers";
 import {
   buildTransaction,
   extractSignatureFromFailedTransaction,
   loadPublicKeysFromFile,
-} from "@/helpers";
+  DEFAULT_CLI_KEYPAIR_PATH,
+  KEYPAIR_PAYER_ENV_NAME,
+} from "@/utils";
 
 dotenv.config();
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 
-const payer = await getKeypairFromEnvironment("PAYER_KEYPAIR");
-console.log("Payer address:", payer.publicKey.toBase58(), "\n");
-
 // create a connection to the Solana blockchain
 const connection = new Connection(
   process.env.SOLANA_RPC_URL || clusterApiUrl("devnet"),
   "confirmed",
 );
+
+const payer = await initializeKeypair(connection, {
+  keypairPath: DEFAULT_CLI_KEYPAIR_PATH,
+  envVariableName: KEYPAIR_PAYER_ENV_NAME,
+});
+
+console.log("Payer address:", payer.publicKey.toBase58(), "\n");
 
 // load the stored PublicKeys for ease of use
 let localKeys = loadPublicKeysFromFile();
