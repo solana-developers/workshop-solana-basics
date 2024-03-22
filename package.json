@@ -8,15 +8,15 @@
   "dependencies": {
     "@metaplex-foundation/js": "^0.19.3",
     "@metaplex-foundation/mpl-token-metadata": "^2.11.1",
-    "@solana-developers/helpers": "^1.5.1",
-    "@solana/spl-token": "^0.3.11",
-    "@solana/web3.js": "^1.89.1",
-    "dotenv": "^16.0.3"
+    "@solana-developers/helpers": "^2.2.0",
+    "@solana/spl-token": "^0.4.1",
+    "@solana/web3.js": "^1.91.1",
+    "dotenv": "^16.4.5"
   },
   "devDependencies": {
-    "eslint": "^8.35.0",
-    "ts-node": "^10.9.1",
-    "tsconfig-paths": "^4.1.2",
-    "typescript": "^4.8.4"
+    "eslint": "^8.57.0",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.4.3"
   }
 }
