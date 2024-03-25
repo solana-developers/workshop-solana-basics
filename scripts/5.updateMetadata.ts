@@ -4,14 +4,19 @@
 
 import * as dotenv from "dotenv";
 
-import { Connection, PublicKey, clusterApiUrl } from "@solana/web3.js";
+import {
+  Connection,
+  PublicKey,
+  TransactionMessage,
+  VersionedTransaction,
+  clusterApiUrl,
+} from "@solana/web3.js";
 import {
   PROGRAM_ID as METADATA_PROGRAM_ID,
   createUpdateMetadataAccountV2Instruction,
 } from "@metaplex-foundation/mpl-token-metadata";
 import { getExplorerLink, initializeKeypair } from "@solana-developers/helpers";
 import {
-  buildTransaction,
   extractSignatureFromFailedTransaction,
   loadPublicKeysFromFile,
   DEFAULT_CLI_KEYPAIR_PATH,
@@ -106,12 +111,17 @@ const updateMetadataInstruction = createUpdateMetadataAccountV2Instruction(
  * Build the transaction to send to the blockchain
  */
 
-const tx = await buildTransaction({
-  connection,
-  payer: payer.publicKey,
-  signers: [payer],
-  instructions: [updateMetadataInstruction],
-});
+const blockhash = (await connection.getLatestBlockhash()).blockhash;
+
+const tx = new VersionedTransaction(
+  new TransactionMessage({
+    payerKey: payer.publicKey,
+    recentBlockhash: blockhash,
+    instructions: [updateMetadataInstruction],
+  }).compileToV0Message(),
+);
+
+tx.sign([payer]);
 
 console.log("\n\n----------------------------\n");
 

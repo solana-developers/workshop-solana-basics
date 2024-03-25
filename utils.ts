@@ -1,12 +1,5 @@
 import fs from "fs";
-import {
-  Connection,
-  Keypair,
-  PublicKey,
-  TransactionInstruction,
-  TransactionMessage,
-  VersionedTransaction,
-} from "@solana/web3.js";
+import { Connection, PublicKey } from "@solana/web3.js";
 import { getExplorerLink } from "@solana-developers/helpers";
 
 // define some default locations
@@ -119,46 +112,4 @@ export async function extractSignatureFromFailedTransaction(
 
   // always return the failed signature value
   return failedSig;
-}
-
-/*
-  Standard number formatter
-*/
-export function numberFormatter(num: number, forceDecimals = false) {
-  // set the significant figures
-  const minimumFractionDigits = num < 1 || forceDecimals ? 10 : 2;
-
-  // do the formatting
-  return new Intl.NumberFormat(undefined, {
-    minimumFractionDigits,
-  }).format(num);
-}
-
-/**
- * Helper function to build a signed transaction
- */
-export async function buildTransaction({
-  connection,
-  payer,
-  signers,
-  instructions,
-}: {
-  connection: Connection;
-  payer: PublicKey;
-  signers: Keypair[];
-  instructions: TransactionInstruction[];
-}): Promise<VersionedTransaction> {
-  let blockhash = await connection.getLatestBlockhash().then(res => res.blockhash);
-
-  const messageV0 = new TransactionMessage({
-    payerKey: payer,
-    recentBlockhash: blockhash,
-    instructions,
-  }).compileToV0Message();
-
-  const tx = new VersionedTransaction(messageV0);
-
-  signers.forEach(s => tx.sign([s]));
-
-  return tx;
 }

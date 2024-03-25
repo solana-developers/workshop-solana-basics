@@ -5,14 +5,21 @@
 import * as dotenv from "dotenv";
 
 import {
-  buildTransaction,
   extractSignatureFromFailedTransaction,
   savePublicKeyToFile,
   DEFAULT_CLI_KEYPAIR_PATH,
   KEYPAIR_PAYER_ENV_NAME,
   KEYPAIR_TESTER_ENV_NAME,
 } from "@/utils";
-import { Connection, Keypair, PublicKey, SystemProgram, clusterApiUrl } from "@solana/web3.js";
+import {
+  Connection,
+  Keypair,
+  PublicKey,
+  SystemProgram,
+  TransactionMessage,
+  VersionedTransaction,
+  clusterApiUrl,
+} from "@solana/web3.js";
 import { MINT_SIZE, TOKEN_PROGRAM_ID, createInitializeMint2Instruction } from "@solana/spl-token";
 import {
   PROGRAM_ID as METADATA_PROGRAM_ID,
@@ -172,16 +179,21 @@ const createMetadataInstruction = createCreateMetadataAccountV3Instruction(
  * Build the transaction to send to the blockchain
  */
 
-const tx = await buildTransaction({
-  connection,
-  payer: payer.publicKey,
-  signers: [payer, mintKeypair],
-  instructions: [
-    createMintAccountInstruction,
-    initializeMintInstruction,
-    createMetadataInstruction,
-  ],
-});
+const blockhash = (await connection.getLatestBlockhash()).blockhash;
+
+const tx = new VersionedTransaction(
+  new TransactionMessage({
+    payerKey: payer.publicKey,
+    recentBlockhash: blockhash,
+    instructions: [
+      createMintAccountInstruction,
+      initializeMintInstruction,
+      createMetadataInstruction,
+    ],
+  }).compileToV0Message(),
+);
+
+tx.sign([payer, mintKeypair]);
 
 console.log("\n\n----------------------------\n");
 
