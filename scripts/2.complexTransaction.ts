@@ -98,7 +98,7 @@ const transferToStaticAddressIx = SystemProgram.transfer({
  */
 
 // get the latest recent blockhash
-let recentBlockhash = await connection.getLatestBlockhash().then(res => res.blockhash);
+let recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
 
 // create a transaction message
 const message = new TransactionMessage({

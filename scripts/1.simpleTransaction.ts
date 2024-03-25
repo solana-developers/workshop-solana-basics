@@ -82,7 +82,7 @@ const createAccountIx = SystemProgram.createAccount({
  */
 
 // get the latest recent blockhash
-let recentBlockhash = await connection.getLatestBlockhash().then(res => res.blockhash);
+let recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
 
 // create a message (v0)
 const message = new TransactionMessage({

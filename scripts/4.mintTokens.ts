@@ -61,20 +61,20 @@ const tokenAccount = await getOrCreateAssociatedTokenAccount(
   payer,
   tokenMint,
   payer.publicKey,
-).then(ata => ata.address);
+);
 
 /*
-    note: when creating an ata, the instruction will allocate space on chain
-    if you attempt to allocate space at an existing address on chain, the transaction will fail.
-    ---
-    sometimes, it may be useful to directly create the ata when you know it has not already been created on chain
-    you can see how to do that below
-  */
+  note: when creating an ata, the instruction will allocate space on chain
+  if you attempt to allocate space at an existing address on chain, the transaction will fail.
+  ---
+  sometimes, it may be useful to directly create the ata when you know it has not already been created on chain
+  you can see how to do that below
+*/
 
 // directly create the ata
 // const tokenAccount = await createAccount(connection, payer, tokenMint, payer.publicKey);
 
-console.log("Token account address:", tokenAccount.toBase58());
+console.log("Token account address:", tokenAccount.address.toBase58());
 
 /**
  * The number of tokens to mint takes into account the `decimal` places set on your `tokenMint`.
@@ -94,7 +94,7 @@ const mintSig = await mintTo(
   connection,
   payer,
   tokenMint,
-  tokenAccount,
+  tokenAccount.address,
   payer, // mint authority
   amountOfTokensToMint,
 );
