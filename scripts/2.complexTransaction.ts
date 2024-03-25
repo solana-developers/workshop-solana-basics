@@ -45,7 +45,10 @@ console.log("Payer address:", payer.publicKey.toBase58(), "\n");
 //   requestAirdropIfRequired: false
 // });
 
-const testKeypair = getKeypairFromEnvironment(KEYPAIR_TESTER_ENV_NAME);
+// const testKeypair = getKeypairFromEnvironment(KEYPAIR_TESTER_ENV_NAME);
+
+const testKeypair = Keypair.generate();
+await addKeypairToEnvFile(testKeypair, KEYPAIR_TESTER_ENV_NAME);
 
 console.log("Test keypair address:", testKeypair.publicKey.toBase58());
 
