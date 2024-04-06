@@ -34,7 +34,7 @@ const connection = new Connection(
 );
 
 const payer = await initializeKeypair(connection, {
-  keypairPath: DEFAULT_CLI_KEYPAIR_PATH,
+  // keypairPath: DEFAULT_CLI_KEYPAIR_PATH,
   envVariableName: KEYPAIR_PAYER_ENV_NAME,
 });
 
@@ -42,7 +42,6 @@ console.log("Payer address:", payer.publicKey.toBase58(), "\n");
 
 // const testKeypair = await initializeKeypair(connection, {
 //   envVariableName: KEYPAIR_TESTER_ENV_NAME,
-//   requestAirdropIfRequired: false
 // });
 
 // const testKeypair = getKeypairFromEnvironment(KEYPAIR_TESTER_ENV_NAME);

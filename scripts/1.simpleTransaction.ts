@@ -32,7 +32,7 @@ const connection = new Connection(
  * then auto airdrop some sol if this keypair has a low balance
  */
 const payer = await initializeKeypair(connection, {
-  keypairPath: DEFAULT_CLI_KEYPAIR_PATH,
+  // keypairPath: DEFAULT_CLI_KEYPAIR_PATH,
   envVariableName: KEYPAIR_PAYER_ENV_NAME,
 });
 
