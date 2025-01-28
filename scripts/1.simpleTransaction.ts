@@ -14,7 +14,7 @@ import {
   clusterApiUrl,
 } from "@solana/web3.js";
 import { getExplorerLink, initializeKeypair } from "@solana-developers/helpers";
-import { DEFAULT_CLI_KEYPAIR_PATH, KEYPAIR_PAYER_ENV_NAME } from "@/utils";
+import { KEYPAIR_PAYER_ENV_NAME } from "@/utils";
 
 dotenv.config();
 

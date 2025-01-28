@@ -17,10 +17,9 @@ import {
 import {
   addKeypairToEnvFile,
   getExplorerLink,
-  getKeypairFromEnvironment,
   initializeKeypair,
 } from "@solana-developers/helpers";
-import { DEFAULT_CLI_KEYPAIR_PATH, KEYPAIR_PAYER_ENV_NAME, KEYPAIR_TESTER_ENV_NAME } from "@/utils";
+import { KEYPAIR_PAYER_ENV_NAME, KEYPAIR_TESTER_ENV_NAME } from "@/utils";
 
 dotenv.config();
 
