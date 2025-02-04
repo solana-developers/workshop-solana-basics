@@ -31,6 +31,7 @@ const connection = new Connection(
  * load a keypair from either the local file system or an env variable
  * then auto airdrop some sol if this keypair has a low balance
  */
+console.log("Initializing keypair:", "payer");
 const payer = await initializeKeypair(connection, {
   // keypairPath: DEFAULT_CLI_KEYPAIR_PATH,
   envVariableName: KEYPAIR_PAYER_ENV_NAME,

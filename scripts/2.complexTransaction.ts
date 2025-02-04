@@ -32,6 +32,7 @@ const connection = new Connection(
   "confirmed",
 );
 
+console.log("Initializing keypair:", "payer");
 const payer = await initializeKeypair(connection, {
   // keypairPath: DEFAULT_CLI_KEYPAIR_PATH,
   envVariableName: KEYPAIR_PAYER_ENV_NAME,
@@ -109,11 +110,11 @@ const message = new TransactionMessage({
     // create the test account on chain
     createTestAccountIx,
     // transfer lamports to the static address
-    transferToStaticAddressIx,
+    // transferToStaticAddressIx,
     // transfer lamports to the test address
     transferToTestKeypairIx,
     // transfer lamports to the static address
-    transferToStaticAddressIx,
+    // transferToStaticAddressIx,
   ],
 }).compileToV0Message();
 

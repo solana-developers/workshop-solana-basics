@@ -1,3 +1,7 @@
 node_modules
 .env
+.env.local
+local.env
 .local_keys
+.cache
+test-ledger
